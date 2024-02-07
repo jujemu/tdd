@@ -1,6 +1,7 @@
 package starbuckbuck.coffeeorderkiosk.domain.product;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import starbuckbuck.coffeeorderkiosk.domain.BaseEntity;
@@ -21,7 +22,8 @@ public class Product extends BaseEntity {
     private String name;
     private Integer price;
 
-    public Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, Integer price) {
+    @Builder
+    private Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, Integer price) {
         this.productNumber = productNumber;
         this.type = type;
         this.sellingStatus = sellingStatus;
