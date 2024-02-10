@@ -1,15 +1,17 @@
 package starbuckbuck.coffeeorderkiosk.domain.order.presentation;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import starbuckbuck.coffeeorderkiosk.domain.order.business.OrderService;
 
+@RequiredArgsConstructor
 @RestController
 public class OrderController {
 
-    @PostMapping("/order")
-    public void createOrder() {
-        return;
+    private final OrderService orderService;
+
+    @PostMapping("/api/v1/orders/new")
+    public void createOrder(OrderCreateRequest request) {
+        orderService.createOrder(request);
     }
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OrdersTest {
+class OrderTest {
 
     @DisplayName("상품 목록에서 상품을 선택하여 주문할 수 있다.")
     @Test

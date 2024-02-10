@@ -15,12 +15,14 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String productNumber;
-    @Enumerated(EnumType.STRING)
-    private ProductType type;
-    @Enumerated(EnumType.STRING)
-    private ProductSellingStatus sellingStatus;
     private String name;
     private Integer price;
+
+    @Enumerated(EnumType.STRING)
+    private ProductType type;
+
+    @Enumerated(EnumType.STRING)
+    private ProductSellingStatus sellingStatus;
 
     @Builder
     private Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, Integer price) {

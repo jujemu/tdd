@@ -2,7 +2,7 @@ package starbuckbuck.coffeeorderkiosk.domain.orderproduct;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import starbuckbuck.coffeeorderkiosk.domain.order.Orders;
+import starbuckbuck.coffeeorderkiosk.domain.order.Order;
 import starbuckbuck.coffeeorderkiosk.domain.product.Product;
 
 @Getter
@@ -15,7 +15,7 @@ public class OrderProduct {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Orders order;
+    private Order order;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

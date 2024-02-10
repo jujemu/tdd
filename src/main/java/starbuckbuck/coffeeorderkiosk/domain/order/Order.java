@@ -2,24 +2,34 @@ package starbuckbuck.coffeeorderkiosk.domain.order;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import starbuckbuck.coffeeorderkiosk.domain.BaseEntity;
 import starbuckbuck.coffeeorderkiosk.domain.orderproduct.OrderProduct;
 
 import java.time.LocalTime;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
+
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Orders {
+@Table(name = "orders")
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "order")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+    private LocalTime registeredDateTime;
+
+    @OneToMany(mappedBy = "order", cascade = ALL)
     private List<OrderProduct> orderProducts;
 
-    public Orders(List<OrderProduct> orderProducts, LocalTime create) {
+    public Order(List<OrderProduct> orderProducts, LocalTime create) {
         LocalTime open = LocalTime.of(8, 0);
         LocalTime closed = LocalTime.of(22, 0);
         if (create.isBefore(open) || create.isAfter(closed)) {
