@@ -10,6 +10,7 @@ import starbuckbuck.coffeeorderkiosk.domain.product.Product;
 import starbuckbuck.coffeeorderkiosk.domain.product.ProductType;
 import starbuckbuck.coffeeorderkiosk.domain.product.persistence.ProductRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +44,9 @@ class OrderServiceTest {
 
         //then
         assertThat(response.getOrderId()).isNotNull();
-        assertThat(response.getTotalPrice()).isEqualTo(18000);
+        assertThat(response)
+                .extracting("registeredDateTime", "totalPrice")
+                .contains(LocalDateTime.now(), 18000);
         assertThat(response.getProductResponses()).hasSize(3)
                 .extracting("productNumber", "name")
                 .containsExactlyInAnyOrder(
