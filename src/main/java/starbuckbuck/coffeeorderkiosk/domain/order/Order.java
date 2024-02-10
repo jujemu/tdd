@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import starbuckbuck.coffeeorderkiosk.domain.BaseEntity;
 import starbuckbuck.coffeeorderkiosk.domain.orderproduct.OrderProduct;
+import starbuckbuck.coffeeorderkiosk.domain.product.Product;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -24,23 +26,28 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    private LocalTime registeredDateTime;
+    private LocalDateTime registeredDateTime;
 
     @OneToMany(mappedBy = "order", cascade = ALL)
     private List<OrderProduct> orderProducts;
 
-    public Order(List<OrderProduct> orderProducts, LocalTime create) {
+    public Order(List<Product> products, LocalDateTime createDateTime) {
+        LocalTime createTime = createDateTime.toLocalTime();
         LocalTime open = LocalTime.of(8, 0);
         LocalTime closed = LocalTime.of(22, 0);
-        if (create.isBefore(open) || create.isAfter(closed)) {
+        if (createTime.isBefore(open) || createTime.isAfter(closed)) {
             throw new IllegalArgumentException("운영시간이 아닙니다.");
         }
+        this.registeredDateTime = createDateTime;
+        this.orderStatus = OrderStatus.INIT;
 
-        if (orderProducts == null || orderProducts.isEmpty()) {
+        if (products == null || products.isEmpty()) {
             throw new IllegalArgumentException("한 개 이상 주문해야합니다.");
         }
 
-        this.orderProducts = orderProducts;
+        this.orderProducts = products.stream()
+                .map(product -> new OrderProduct(this, product))
+                .toList();
     }
 
     public Integer calculateTotalPrice() {
