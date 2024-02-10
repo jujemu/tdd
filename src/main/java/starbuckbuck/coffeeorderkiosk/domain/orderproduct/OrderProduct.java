@@ -1,11 +1,14 @@
 package starbuckbuck.coffeeorderkiosk.domain.orderproduct;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import starbuckbuck.coffeeorderkiosk.domain.order.Order;
 import starbuckbuck.coffeeorderkiosk.domain.product.Product;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class OrderProduct {
 
@@ -20,4 +23,8 @@ public class OrderProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    public OrderProduct(Order order, Product product) {
+        this.order = order;
+        this.product = product;
+    }
 }
