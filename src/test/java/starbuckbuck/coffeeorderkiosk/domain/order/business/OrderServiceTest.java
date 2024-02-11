@@ -11,7 +11,9 @@ import starbuckbuck.coffeeorderkiosk.domain.product.ProductType;
 import starbuckbuck.coffeeorderkiosk.domain.product.persistence.ProductRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -36,17 +38,20 @@ class OrderServiceTest {
         Product product3 = createProduct("003", HANDMADE, "팥빙수", 8000);
         productRepository.saveAll(List.of(product1, product2, product3));
 
-        List<String> productNumbers = List.of("001", "003");
-        OrderCreateRequest request = new OrderCreateRequest(productNumbers);
+        Map<String, Integer> productNumberCounter = new HashMap<>();
+        productNumberCounter.put("001", 2);
+        productNumberCounter.put("003", 1);
+        OrderCreateRequest request = new OrderCreateRequest(productNumberCounter);
 
         //when
-        OrderResponse response = orderService.createOrder(request);
+        LocalDateTime create = LocalDateTime.of(2023, 7, 1, 15, 0);
+        OrderResponse response = orderService.createOrder(request, create);
 
         //then
         assertThat(response.getOrderId()).isNotNull();
         assertThat(response)
                 .extracting("registeredDateTime", "totalPrice")
-                .contains(LocalDateTime.now(), 18000);
+                .contains(create, 18000);
         assertThat(response.getProductResponses()).hasSize(3)
                 .extracting("productNumber", "name")
                 .containsExactlyInAnyOrder(
