@@ -150,4 +150,8 @@ productRepository.saveAll(List.of(product1, product2, product3));
 ```
 
 - 생성된 order id 확인; notNull
+  - 비즈니스 계층에서 검증해야할 부분에는 주문이 정상적으로 저장되었는지가 포함된다.
+  - 영속 계층에 대한 검증이 끝났지만 서비스 계층에서 통합 테스트가 이루어져야 하는 점을 잊지 말자.
+  - OrderRepository 사용해서 db를 조회하는 것보다는 persistence context 저장되었을 때,
+  - id 값이 부여되는 점을 이용해서 검증하자.
 - 리스트의 경우는 사이즈와 필드값을 추출하여 검증한다.
