@@ -155,3 +155,19 @@ productRepository.saveAll(List.of(product1, product2, product3));
   - OrderRepository 사용해서 db를 조회하는 것보다는 persistence context 저장되었을 때,
   - id 값이 부여되는 점을 이용해서 검증하자.
 - 리스트의 경우는 사이즈와 필드값을 추출하여 검증한다.
+
+## 테스트 메서드 충돌
+
+- 여러 테스트 메서드를 실행하면 데이터를 저장하면서 서로 간섭할 수 있다.
+- 테스트 메서드가 종료되면서 rollback 해야한다. 다음의 방법이 있다.
+  - AfterEach annotation 메서드
+  - 클래스에 Transactional annotation
+
+## 컨트롤러 수동 테스트
+
+인텔리제이에서 지원하는 http 문법을 사용해서 직접 테스트해볼 수 있다. 다음을 참고하자.
+
+_https://sihyung92.oopy.io/etc/intellij/2_
+
+
+
