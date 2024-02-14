@@ -15,7 +15,7 @@ public enum ProductSellingStatus {
 
     private final String text;
 
-    public static List<ProductSellingStatus> forDisplay() {
+    public static List<ProductSellingStatus> forDisplayInKiosk() {
         return List.of(SELLING, PAUSE);
     }
 }
