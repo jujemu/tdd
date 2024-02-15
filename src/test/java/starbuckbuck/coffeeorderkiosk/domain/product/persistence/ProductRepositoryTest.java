@@ -1,11 +1,9 @@
 package starbuckbuck.coffeeorderkiosk.domain.product.persistence;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import starbuckbuck.coffeeorderkiosk.domain.product.Product;
 import starbuckbuck.coffeeorderkiosk.domain.product.ProductSellingStatus;
@@ -55,7 +53,7 @@ class ProductRepositoryTest {
         productRepository.saveAll(List.of(product1, product2, product3));
 
         //when
-        List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
+        List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplayInKiosk());
 
         //then
         assertThat(products).hasSize(2)

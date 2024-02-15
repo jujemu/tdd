@@ -169,5 +169,9 @@ productRepository.saveAll(List.of(product1, product2, product3));
 
 _https://sihyung92.oopy.io/etc/intellij/2_
 
+## (매우 중요)테스트 코드 작성 시에 유의해야할 점
 
+ - 서비스 계층의 transaction 보장이 되어있는 것을 확인하고 테스트에 트랜잭션을 걸어야한다.
+   - 테스트에서 트랜잭션이 보장되는 것 또한 검증 대상이기 때문에 이를 확실하게 인지해야한다.
+ - JPA를 이해하고 생성된 query가 예상했던 동작과 일치하는지 확인한다.
 

@@ -18,7 +18,7 @@ public class ProductService {
     ProductSellingStatus가 SELLING, PAUSE 목록을 가져온다.
      */
     public List<ProductResponse> getSellingProducts() {
-        List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
+        List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplayInKiosk());
 
         return products.stream()
                 .map(ProductResponse::of)
