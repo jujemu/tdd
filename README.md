@@ -107,6 +107,8 @@ productRepository.saveAll(List.of(product1, product2, product3));
 
 ## 로직에서 어려웠던 점
 
+### 주문받고 중복된 객체 생성
+
 ```java
 public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime now) {
         Map<String, Integer> productNumberCounter = request.getProductNumberCounter();
@@ -133,3 +135,34 @@ public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime now) 
 - 상품의 중복된 개수만큼 OrderProduct 생성
   - numberOfProduct 컬럼을 추가할 수도 있지만 팀에서 결정된 사항
   - 카운터로 리스트를 만드는 과정에서 Map.entry, Collections.nCopies 이해했다.
+
+### 제니릭 관련
+
+```java
+public static <T> ApiResponse<T> of(HttpStatus status, String message) {
+    return new ApiResponse<>(status, message, null);
+}
+
+public static <T> ApiResponse<T> of(HttpStatus status, T data) {
+    return new ApiResponse<>(status, status.name(), data);
+}
+```
+
+ApiResponse 위처럼 정의되어 있다.
+
+```java
+@RestControllerAdvice
+public class ApiControllerAdvice {
+
+    @ExceptionHandler(BindException.class)
+    public ApiResponse<?> bindException(BindException e) {
+        return ApiResponse.of(
+                BAD_REQUEST,
+                e.getBindingResult().getAllErrors().get(0).getDefaultMessage()
+        );
+    }
+}
+```
+
+- 만약 예외 처리에서 ApiResponse.of 호출하면 어떤 메서드가 호출될지를, 어떻게 오버로딩을 처리할지가 궁금했다.
+- 메세지를 전달하기 위해서 String 넣으면 위 메서드를 호출하고 그 외에는 제네릭 메서드를 호출한다.
