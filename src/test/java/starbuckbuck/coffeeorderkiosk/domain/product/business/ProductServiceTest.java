@@ -49,6 +49,7 @@ class ProductServiceTest {
         ProductResponse response = productService.createProduct(request);
 
         //then
+        assertThat(response.getId()).isNotNull();
         assertThat(response)
                 .extracting("productNumber", "name", "price", "type", "sellingStatus")
                 .contains("003", "아사이", 6000, HANDMADE, SELLING);
@@ -64,6 +65,7 @@ class ProductServiceTest {
         ProductResponse response = productService.createProduct(request);
 
         //then
+        assertThat(response.getId()).isNotNull();
         assertThat(response)
                 .extracting("productNumber", "name", "price", "sellingStatus", "type")
                 .contains("001", "아사이", 6000, HANDMADE, SELLING);
