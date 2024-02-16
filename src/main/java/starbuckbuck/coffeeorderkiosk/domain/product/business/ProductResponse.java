@@ -1,10 +1,12 @@
 package starbuckbuck.coffeeorderkiosk.domain.product.business;
 
 import lombok.Builder;
+import lombok.Getter;
 import starbuckbuck.coffeeorderkiosk.domain.product.Product;
 import starbuckbuck.coffeeorderkiosk.domain.product.ProductSellingStatus;
 import starbuckbuck.coffeeorderkiosk.domain.product.ProductType;
 
+@Getter
 public class ProductResponse {
 
     private Long id;
