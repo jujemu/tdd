@@ -206,3 +206,62 @@ when 절의 productService.createProduct() 호출하면서 반환하는 응답�
 ```java
 assertThat(response.getId()).isNotNull();
 ```
+
+## WebMvcTest
+
+```java
+@WebMvcTest(controllers = ProductController.class)
+class ProductControllerTest {
+
+}
+```
+
+WebMvcTest 어노테이션에 테스트하고자 하는 컨트롤러를 넣는다. 넣지 않으면 모든 컨트롤러를 주입받는다.
+
+### MockBean, Mock
+
+![img.png](images/mockito.png)
+
+### 기본적인 사용방법
+
+```java
+@WebMvcTest(controllers = ProductController.class)
+class ProductControllerTest {
+
+    @MockBean
+    ProductService productService;
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @DisplayName("관리자가 새로운 제품을 등록한다.")
+    @Test
+    void createProduct() throws Exception {
+        //given
+        ProductCreateRequest request = new ProductCreateRequest("아메리카노", 5000, HANDMADE, SELLING);
+
+        //when //then
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/products/new")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+}
+```
+
+- MockMvcRequestBuilders.post: http post 요청
+- objectMapper.writeValueAsString(request): 직렬화
+- MockMvcResultHandlers.print(): 응답의 상세한 결과 출력
+- MockMvcResultMatchers.status().isOk(): 응답 status code
+
+### @EnableJpaAuditing in WebMvcTest
+
+_https://stackoverflow.com/questions/51467132/spring-webmvctest-with-enablejpa-annotation_
+
+- WebMvcTest 진행할 때, JPA 관련 문제가 있으면 적절한 Configuration 클래스에 EnableJpa~ 넣어주면 된다. 
