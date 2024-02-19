@@ -1,7 +1,8 @@
 package starbuckbuck.coffeeorderkiosk.domain.product.presentation;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import starbuckbuck.coffeeorderkiosk.domain.product.Product;
@@ -12,12 +13,19 @@ import starbuckbuck.coffeeorderkiosk.domain.product.ProductType;
 @NoArgsConstructor
 public class ProductCreateRequest {
 
+    @NotBlank(message = "상품 이름은 필수입니다.")
     private String name;
-    private Integer price;
+
+    @Positive(message = "상품 가격은 양수값을 가져야 합니다.")
+    private int price;
+
+    @NotNull(message = "상품 타입은 필수입니다.")
     private ProductType type;
+
+    @NotNull(message = "상품 판매 상태은 필수입니다.")
     private ProductSellingStatus sellingStatus;
 
-    public ProductCreateRequest(String name, Integer price, ProductType type, ProductSellingStatus sellingStatus) {
+    public ProductCreateRequest(String name, int price, ProductType type, ProductSellingStatus sellingStatus) {
         this.name = name;
         this.price = price;
         this.type = type;
