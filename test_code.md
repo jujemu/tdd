@@ -260,8 +260,57 @@ class ProductControllerTest {
 - MockMvcResultHandlers.print(): 응답의 상세한 결과 출력
 - MockMvcResultMatchers.status().isOk(): 응답 status code
 
+```java
+@DisplayName("관리자가 새로운 제품을 등록할 때는 상품 이름은 필수값이다.")
+@Test
+void createProductWithoutName() throws Exception {
+//given
+ProductCreateRequest request = new ProductCreateRequest("", 5000, HANDMADE, SELLING);
+
+//when //then
+mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/v1/products/new")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("400"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("BAD_REQUEST"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("상품 이름은 필수입니다."));
+}
+```
+
+- MockMvcResultMatchers.jsonPath: 응답의 json 형태를 매핑하여 검증한다.
+
+### 조심해야할 점
+
+```java
+@RequiredArgsConstructor
+@RestController
+public class ProductController {
+
+    private final ProductService productService;
+    
+    @PostMapping("/api/v1/products/new")
+    public ApiResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) {
+        return ApiResponse.ok(productService.createProduct(request));
+    }
+}
+```
+
+- 검증하지 않을 때는 @RequestBody 필요없었지만, Valid  어노테이션으로 검증하려면 꼭 넣어주어야한다.
+- https://velog.io/@appti/RequestBody-피드백을-이해하고-해결하기-위한-과정 참고
+
 ### @EnableJpaAuditing in WebMvcTest
 
 _https://stackoverflow.com/questions/51467132/spring-webmvctest-with-enablejpa-annotation_
 
 - WebMvcTest 진행할 때, JPA 관련 문제가 있으면 적절한 Configuration 클래스에 EnableJpa~ 넣어주면 된다. 
+
+```java
+@EnableJpaAuditing
+@Configuration
+public class JpaAuditingConfig {
+}
+```
