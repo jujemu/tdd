@@ -35,13 +35,14 @@ class ProductControllerTest {
         //given
         ProductCreateRequest request = new ProductCreateRequest("아메리카노", 5000, HANDMADE, SELLING);
 
-        //when //then
+        //when
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/v1/products/new")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
+        // then
         perform
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
