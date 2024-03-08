@@ -10,11 +10,6 @@
 
 ## 기능 요구사항
 
-### 관리자
-
- - 주문 목록에 음료 추가/삭제 기능
- - 주문 목록 전체 지우기
-
 ### 키오스크
  
 - 상품 목록을 조회할 수 있다.
@@ -32,50 +27,14 @@
 - 재고는 상품번호를 가진다.
 - 재고와 관련 있는 상품 타입은 병, 베이커리
 
+## 기능 요구사항 - 2차 추가
+
+- 관리자는 키오스크로 제품을 등록할 수 있다.
+- 제품 등록에는 타입, 상태, 이름, 가격을 필요로 한다.
+
 # 회고
 
 ## 테스트 작성
-
-### given 두 예시
-
-```java
-createProducts();
-
-private void createProducts() {
-        Product product1 = createProduct("00Ω1", HANDMADE, "아메리카노", 5000);
-
-        Product product2= Product.builder()
-                .productNumber("002")
-                .type(HANDMADE)
-                .sellingStatus(PAUSE)
-                .name("카페라떼")
-                .price(6000)
-                .build();
-
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .type(HANDMADE)
-                .sellingStatus(STOP)
-                .name("팥빙수")
-                .price(8000)
-                .build();
-
-        productRepository.saveAll(List.of(product1, product2, product3));
-    }
-```
-
-위 처럼 테스트 메서드에 product 생성 부분을 메서드로 묶으면 공통된 부분을 간소화할 수 있지만  
-어떤 product 생성되었는지, 테스트에 적합한 product를 생성할 수 없는 단점을 가지고 있다.
-
-따라서 아래처럼 풀어서 구현하기로 했다. 기존에는 createProducts() 한 줄로 어떤 product 생성되는지 알 수 없지만  
-테스트에서 알고 있어야하는 값을 parameter 전달해서 테스트 메서드만 보고도 이해할 수 있도록 했다. 
-
-```java
-Product product1 = createProduct("001", HANDMADE, "아메리카노", 5000);
-Product product2 = createProduct("002", HANDMADE, "카페라떼", 6000);
-Product product3 = createProduct("003", HANDMADE, "팥빙수", 8000);
-productRepository.saveAll(List.of(product1, product2, product3));
-```
 
 ### then 절
 
@@ -107,6 +66,8 @@ productRepository.saveAll(List.of(product1, product2, product3));
 
 ## 로직에서 어려웠던 점
 
+### 주문받고 중복된 객체 생성
+
 ```java
 public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime now) {
         Map<String, Integer> productNumberCounter = request.getProductNumberCounter();
@@ -133,3 +94,34 @@ public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime now) 
 - 상품의 중복된 개수만큼 OrderProduct 생성
   - numberOfProduct 컬럼을 추가할 수도 있지만 팀에서 결정된 사항
   - 카운터로 리스트를 만드는 과정에서 Map.entry, Collections.nCopies 이해했다.
+
+### 제니릭 관련
+
+```java
+public static <T> ApiResponse<T> of(HttpStatus status, String message) {
+    return new ApiResponse<>(status, message, null);
+}
+
+public static <T> ApiResponse<T> of(HttpStatus status, T data) {
+    return new ApiResponse<>(status, status.name(), data);
+}
+```
+
+ApiResponse 위처럼 정의되어 있다.
+
+```java
+@RestControllerAdvice
+public class ApiControllerAdvice {
+
+    @ExceptionHandler(BindException.class)
+    public ApiResponse<?> bindException(BindException e) {
+        return ApiResponse.of(
+                BAD_REQUEST,
+                e.getBindingResult().getAllErrors().get(0).getDefaultMessage()
+        );
+    }
+}
+```
+
+- 만약 예외 처리에서 ApiResponse.of 호출하면 어떤 메서드가 호출될지를, 어떻게 오버로딩을 처리할지가 궁금했다.
+- 메세지를 전달하기 위해서 String 넣으면 위 메서드를 호출하고 그 외에는 제네릭 메서드를 호출한다.
