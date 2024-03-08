@@ -2,7 +2,7 @@
 
 ## 테스트 코드
 
-<a href="./test_code.md>테스트 코드에 대해서</a>
+<a href="./test_code.md"> 테스트 코드에 대해서 </a>
 
 ## 프로젝트 소개
 
@@ -35,47 +35,6 @@
 # 회고
 
 ## 테스트 작성
-
-### given 두 예시
-
-```java
-createProducts();
-
-private void createProducts() {
-        Product product1 = createProduct("00Ω1", HANDMADE, "아메리카노", 5000);
-
-        Product product2= Product.builder()
-                .productNumber("002")
-                .type(HANDMADE)
-                .sellingStatus(PAUSE)
-                .name("카페라떼")
-                .price(6000)
-                .build();
-
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .type(HANDMADE)
-                .sellingStatus(STOP)
-                .name("팥빙수")
-                .price(8000)
-                .build();
-
-        productRepository.saveAll(List.of(product1, product2, product3));
-    }
-```
-
-위 처럼 테스트 메서드에 product 생성 부분을 메서드로 묶으면 공통된 부분을 간소화할 수 있지만  
-어떤 product 생성되었는지, 테스트에 적합한 product를 생성할 수 없는 단점을 가지고 있다.
-
-따라서 아래처럼 풀어서 구현하기로 했다. 기존에는 createProducts() 한 줄로 어떤 product 생성되는지 알 수 없지만  
-테스트에서 알고 있어야하는 값을 parameter 전달해서 테스트 메서드만 보고도 이해할 수 있도록 했다. 
-
-```java
-Product product1 = createProduct("001", HANDMADE, "아메리카노", 5000);
-Product product2 = createProduct("002", HANDMADE, "카페라떼", 6000);
-Product product3 = createProduct("003", HANDMADE, "팥빙수", 8000);
-productRepository.saveAll(List.of(product1, product2, product3));
-```
 
 ### then 절
 
