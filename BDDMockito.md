@@ -1,5 +1,6 @@
 # BDD Mockito
 
 ```java
-BDDMockito.given().willReturn() // Mockito.when().thenReturn
+BDDMockito.given(tokenProvider.generateToken(anyLong(), anyString(), any(Duration.class)))
+                .willReturn(token); // Mockito.when().thenReturn
 ```
